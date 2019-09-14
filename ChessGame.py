@@ -2,17 +2,17 @@ import copy
 import pygame
 from pygame.locals import *
 from sys import exit
-from Color import PieceColor as Color
-from ChessPieces import ChessPiece
+from Enums import PieceColor
+from Enums import ChessPiece
 pygame.init()
 screen = pygame.display.set_mode((640, 640))
 winner = False
-turn = Color.WHITE
+turn = PieceColor.WHITE
 select = False
 selected = -1
 black = (200,200,200)
+selectcolor = (150,150,150)
 white = (100,100,100)
-
 wP = pygame.image.load('ChessPieces\wP.png')
 wB = pygame.image.load('ChessPieces\wB.png')
 wR = pygame.image.load('ChessPieces\wR.png')
@@ -36,7 +36,7 @@ def squaretocoordinates(square):
 class boardpiece:
     occupied = False
     piece = ChessPiece.NONE
-    color = Color.NONE
+    color = PieceColor.NONE
     image = None
 
 class boardsquare:
@@ -61,52 +61,52 @@ for i in range(64):
     board.append(boardsquare())
     board[i].backgroundrect=pygame.Rect(squaretocoordinates(i)[0],squaretocoordinates(i)[1],80,80)
 wp = boardpiece()
-wp.piece = "p"
-wp.color = Color.WHITE
+wp.piece = ChessPiece.PAWN
+wp.color = PieceColor.WHITE
 wp.image = wP.copy()
 wr = boardpiece()
-wr.piece = "r"
-wr.color = Color.WHITE
+wr.piece = ChessPiece.ROOK
+wr.color = PieceColor.WHITE
 wr.image = wR.copy()
 wb = boardpiece()
-wb.piece = "b"
-wb.color = Color.WHITE
+wb.piece = ChessPiece.BISHOP
+wb.color = PieceColor.WHITE
 wb.image = wB.copy()
 wn = boardpiece()
-wn.piece = "n"
-wn.color = Color.WHITE
+wn.piece = ChessPiece.KNIGHT
+wn.color = PieceColor.WHITE
 wn.image = wN.copy()
 wk = boardpiece()
-wk.piece = "k"
-wk.color = Color.WHITE
+wk.piece = ChessPiece.KING
+wk.color = PieceColor.WHITE
 wk.image = wK.copy()
 wq = boardpiece()
-wq.piece = "q"
-wq.color = Color.WHITE
+wq.piece = ChessPiece.QUEEN
+wq.color = PieceColor.WHITE
 wq.image = wQ.copy()
 bp = boardpiece()
-bp.piece = "P"
-bp.color = Color.BLACK
+bp.piece = ChessPiece.PAWN
+bp.color = PieceColor.BLACK
 bp.image = bP.copy()
 br = boardpiece()
-br.piece = "R"
-br.color = Color.BLACK
+br.piece = ChessPiece.ROOK
+br.color = PieceColor.BLACK
 br.image = bR.copy()
 bb = boardpiece()
-bb.piece = "B"
-bb.color = Color.BLACK
+bb.piece = ChessPiece.BISHOP
+bb.color = PieceColor.BLACK
 bb.image = bB.copy()
 bn = boardpiece()
-bn.piece = "N"
-bn.color = Color.BLACK
+bn.piece = ChessPiece.KNIGHT
+bn.color = PieceColor.BLACK
 bn.image = bN.copy()
 bk = boardpiece()
-bk.piece = "K"
-bk.color = Color.BLACK
+bk.piece = ChessPiece.KING
+bk.color = PieceColor.BLACK
 bk.image = bK.copy()
 bq = boardpiece()
-bq.piece = "Q"
-bq.color = Color.BLACK
+bq.piece = ChessPiece.QUEEN
+bq.color = PieceColor.BLACK
 bq.image = bQ.copy()
 board[0].boardpiece = br
 board[1].boardpiece = bn
@@ -143,7 +143,7 @@ board[49].boardpiece = wp
 board[48].boardpiece = wp
 for i in range(64):
     board[i].backgroundcolor = getbackgroundcolor(i)
-    if board[i].boardpiece.piece != " ":
+    if board[i].boardpiece.piece != ChessPiece.NONE:
         board[i].boardpiece.occupied = True
 
 
@@ -246,7 +246,7 @@ def movelist(selected):  # Creates a list of validmoves. The purpose is to check
     for deletion in possiblemoves:  # Looking for impossible moves due to collision, and deleting them
         if board[deletion].boardpiece.occupied:
             occupiedcheck.append(deletion)
-    if board[selected].boardpiece.piece == "r" or board[selected].boardpiece.piece == "R":
+    if board[selected].boardpiece.piece == ChessPiece.ROOK:
         for square in occupiedcheck:
             try:
                 if square > selected and square % 8 == selected % 8:
@@ -277,7 +277,7 @@ def movelist(selected):  # Creates a list of validmoves. The purpose is to check
                     possiblemoves.remove(selected)
             except:
                 pass
-    if board[selected].boardpiece.piece == "b" or board[selected].boardpiece.piece == "B":
+    if board[selected].boardpiece.piece == ChessPiece.BISHOP:
         for square in occupiedcheck:
             try:
                 if square > selected:
@@ -311,7 +311,7 @@ def movelist(selected):  # Creates a list of validmoves. The purpose is to check
             except:
                 pass
 
-    if board[selected].boardpiece.piece == "Q" or board[selected].boardpiece.piece == "q":
+    if board[selected].boardpiece.piece == ChessPiece.QUEEN:
         for square in occupiedcheck:
             try:
                 if square > selected and square % 8 == selected % 8:
@@ -373,20 +373,20 @@ def movelist(selected):  # Creates a list of validmoves. The purpose is to check
 
 def validmove(selected,
               intendedmove):  # piece is type of chess piece that is being moved. selected is location of chess piece that is being moved, color is the color of said piece, and intendedmove is where you want to move it
-    if board[selected].boardpiece.piece == "p" or board[selected].boardpiece.piece == "P":
-        if board[selected].boardpiece.color == Color.BLACK and selected > 7 and selected < 16:  # If the white pawn hasn't moved yet
+    if board[selected].boardpiece.piece == ChessPiece.PAWN:
+        if board[selected].boardpiece.color == PieceColor.BLACK and selected > 7 and selected < 16:  # If the white pawn hasn't moved yet
             if ((board[selected + 8].boardpiece.occupied == False and intendedmove == selected + 8) or (
                     board[selected + 16].boardpiece.occupied == False and intendedmove == selected + 16)):
                 return True
             else:
                 return False
-        if board[selected].boardpiece.color == Color.WHITE and selected > 47 and selected < 56:  # If the black pawn hasn't moved yet
+        if board[selected].boardpiece.color == PieceColor.WHITE and selected > 47 and selected < 56:  # If the black pawn hasn't moved yet
             if ((board[selected - 8].boardpiece.occupied == False and intendedmove == selected - 8) or (
                     board[selected - 16].boardpiece.occupied == False and intendedmove == selected - 16)):
                 return True
             else:
                 return False
-        if board[selected].boardpiece.color == Color.BLACK:
+        if board[selected].boardpiece.color == PieceColor.BLACK:
             if intendedmove == selected + 8 and board[intendedmove].boardpiece.occupied == False:
                 return True
             elif selected % 8 == 0 and intendedmove == selected + 9 and board[intendedmove].boardpiece.color != board[
@@ -398,24 +398,24 @@ def validmove(selected,
             elif (intendedmove == selected + 9 or intendedmove == selected + 7) and board[intendedmove].boardpiece.color != board[
                 selected].boardpiece.color and selected % 8 != 0 and selected % 8 != 7:
                 return True
-        if board[selected].boardpiece.color == Color.WHITE:
+        if board[selected].boardpiece.color == PieceColor.WHITE:
             if intendedmove == selected - 8 and board[intendedmove].boardpiece.occupied == False:
                 return True
             elif selected % 8 == 0 and intendedmove == selected - 7 and board[intendedmove].boardpiece.color != board[
-                selected].boardpiece.color and board[intendedmove].boardpiece.color != "":
+                selected].boardpiece.color and board[intendedmove].boardpiece.color != PieceColor.NONE:
                 return True
             elif selected % 8 == 7 and intendedmove == selected - 9 and board[intendedmove].boardpiece.color != board[
-                selected].boardpiece.color and board[intendedmove].boardpiece.color != "":
+                selected].boardpiece.color and board[intendedmove].boardpiece.color != PieceColor.NONE:
                 return True
             elif (intendedmove == selected - 9 or intendedmove == selected - 7) and board[intendedmove].boardpiece.color != board[
                 selected].boardpiece.color and selected % 8 != 0 and selected % 8 != 7:
                 return True
-    elif board[selected].boardpiece.piece == "r" or board[selected].boardpiece.piece == "R":
+    elif board[selected].boardpiece.piece == ChessPiece.ROOK:
         if abs(intendedmove - selected) % 8 == 0:
             return True
         if intendedmove // 8 == selected // 8:
             return True
-    elif board[selected].boardpiece.piece == "b" or board[selected].boardpiece.piece == "B":
+    elif board[selected].boardpiece.piece == ChessPiece.BISHOP:
         i = 0
         while i + selected % 8 != 8:
             if intendedmove == 8 * i + i + selected or intendedmove == -(8 * i) + i + selected:
@@ -427,7 +427,7 @@ def validmove(selected,
                 return True
             i += 1
         i = 0
-    elif (board[selected].boardpiece.piece == "n" or board[selected].boardpiece.piece == "N") and board[intendedmove].boardpiece.color != board[
+    elif (board[selected].boardpiece.piece == ChessPiece.KNIGHT) and board[intendedmove].boardpiece.color != board[
         selected].boardpiece.color:
         if selected % 8 == 0:
             if selected // 8 == 0:
@@ -496,7 +496,7 @@ def validmove(selected,
         else:
             if intendedmove == selected - 17 or intendedmove == selected - 15 or intendedmove == selected - 10 or intendedmove == selected - 6 or intendedmove == selected + 6 or intendedmove == selected + 10 or intendedmove == selected + 15 or intendedmove == selected + 17:
                 return True
-    elif board[selected].boardpiece.piece == "q" or board[selected].boardpiece.piece == "Q":
+    elif board[selected].boardpiece.piece == ChessPiece.QUEEN:
         if abs(intendedmove - selected) % 8 == 0:
             return True
         if intendedmove // 8 == selected // 8:
@@ -512,7 +512,7 @@ def validmove(selected,
                 return True
             i += 1
         i = 0
-    elif board[selected].boardpiece.piece == "k" or board[selected].boardpiece.piece == "K":
+    elif board[selected].boardpiece.piece == ChessPiece.KING:
         if board[selected].boardpiece.color != board[intendedmove].boardpiece.color:
             if abs(intendedmove - selected) % 8 == 0 and (selected + 8 == intendedmove or selected - 8 == intendedmove):
                 return True
@@ -545,9 +545,9 @@ def check(chessboard):  # Checks the moves that can be made in every square. If 
     for check in range(64):
         thelist = movelist(check)
         for number in thelist:
-            if chessboard[number].boardpiece.piece == "k" and chessboard[check].boardpiece.color == Color.BLACK and turn == Color.WHITE:
+            if chessboard[number].boardpiece.piece == ChessPiece.KING and chessboard[check].boardpiece.color == PieceColor.BLACK and turn == PieceColor.WHITE:
                 return True
-            if chessboard[number].boardpiece.piece == "K" and chessboard[check].boardpiece.color == Color.WHITE and turn == Color.BLACK:
+            if chessboard[number].boardpiece.piece == ChessPiece.KING and chessboard[check].boardpiece.color == PieceColor.WHITE and turn == PieceColor.BLACK:
                 return True
     return False
 
@@ -562,8 +562,6 @@ def checkmate():  # Checks for check in every situation given the possible moves
                     print(thelist)
                     print(i)
                     print(square)
-                    printgame(board)
-                    printgame(simulatedmovement(i, square))
                     return False
     return True
 
@@ -610,10 +608,10 @@ def makemove(selected, intendedmove):
                 if promotion == "n" or promotion == "N" or promotion == "Knight":
                     board[intendedmove].boardpiece.piece = "N"
             global turn
-            if turn == Color.WHITE:
-                turn = Color.BLACK
+            if turn == PieceColor.WHITE:
+                turn = PieceColor.BLACK
             else:
-                turn = Color.WHITE
+                turn = PieceColor.WHITE
 
 
 def rungame():
@@ -623,7 +621,7 @@ def rungame():
         pygame.event.clear()
         if check(board):
             if checkmate():
-                if turn == Color.WHITE:
+                if turn == PieceColor.WHITE:
                     print("Black wins!")
                 else:
                     print("White wins!")
@@ -657,10 +655,20 @@ def rungame():
                 boarddraw()
                 select = False
                 selected = -1
+
+        #if select:
+           # movelist(selected)
+          #  print(selected)
+         #   movement = input("Please select a square to move to: ")
+            #intendedmove = location[movement]
+           # makemove(selected, intendedmove)
+          #  select = False
+          #  selected = -1
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 exit()
         pygame.display.flip()
-rungame()
 
+
+rungame()
