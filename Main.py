@@ -33,6 +33,8 @@ def rungame():
             if pygame.event.get(MOUSEBUTTONDOWN):
                 move = coordinatestosquareindex(x, y)
                 print(movelist(move,board))
+                print(board[move].boardpiece.piece)
+                print(move)
                 if turn == board[move].boardpiece.color and len(movelist(move,board)) > 0:
                     select = True
                     selected = move
@@ -48,7 +50,7 @@ def rungame():
             elif pygame.event.peek(MOUSEBUTTONDOWN) and index in movelist(move,board):
                 print("intendedmove!")
                 intendedmove = coordinatestosquareindex(x,y)
-                turn = makemove(selected,intendedmove, turn,board)
+                turn = makemove(selected,intendedmove, turn,board,screen)
                 boarddraw(screen,board)
                 select = False
                 selected = -1
@@ -56,7 +58,6 @@ def rungame():
             if event.type == QUIT:
                 pygame.quit()
                 exit()
-        pygame.display.flip()
 
 
 rungame()

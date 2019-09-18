@@ -1,7 +1,8 @@
 import pygame
 from BoardClasses import boardsquare, boardpiece
-from SquareClickDetection import squareindextocoordinates, squaretocoordinatespiecelocation, coordinatestosquareindex
+from SquareClickDetection import squareindextocoordinates, squareindextocoordinatespiecelocation, coordinatestosquareindex
 from Enums import PieceColor, ChessPiece
+import copy
 black = (200,200,200)
 white = (100,100,100)
 wP = pygame.image.load('ChessPieces\wP.png')
@@ -46,88 +47,77 @@ def setupboard(board):
     wp = boardpiece()
     wp.piece = ChessPiece.PAWN
     wp.color = PieceColor.WHITE
-    wp.image = wP.copy()
     wr = boardpiece()
     wr.piece = ChessPiece.ROOK
     wr.color = PieceColor.WHITE
-    wr.image = wR.copy()
     wb = boardpiece()
     wb.piece = ChessPiece.BISHOP
     wb.color = PieceColor.WHITE
-    wb.image = wB.copy()
     wn = boardpiece()
     wn.piece = ChessPiece.KNIGHT
     wn.color = PieceColor.WHITE
-    wn.image = wN.copy()
     wk = boardpiece()
     wk.piece = ChessPiece.KING
     wk.color = PieceColor.WHITE
-    wk.image = wK.copy()
     wq = boardpiece()
     wq.piece = ChessPiece.QUEEN
     wq.color = PieceColor.WHITE
-    wq.image = wQ.copy()
     bp = boardpiece()
     bp.piece = ChessPiece.PAWN
     bp.color = PieceColor.BLACK
-    bp.image = bP.copy()
     br = boardpiece()
     br.piece = ChessPiece.ROOK
     br.color = PieceColor.BLACK
-    br.image = bR.copy()
     bb = boardpiece()
     bb.piece = ChessPiece.BISHOP
     bb.color = PieceColor.BLACK
-    bb.image = bB.copy()
     bn = boardpiece()
     bn.piece = ChessPiece.KNIGHT
     bn.color = PieceColor.BLACK
-    bn.image = bN.copy()
     bk = boardpiece()
     bk.piece = ChessPiece.KING
     bk.color = PieceColor.BLACK
-    bk.image = bK.copy()
     bq = boardpiece()
     bq.piece = ChessPiece.QUEEN
     bq.color = PieceColor.BLACK
-    bq.image = bQ.copy()
-    board[0].boardpiece = br
-    board[1].boardpiece = bn
-    board[2].boardpiece = bb
-    board[3].boardpiece = bq
-    board[4].boardpiece = bk
-    board[5].boardpiece = bb
-    board[6].boardpiece = bn
-    board[7].boardpiece = br
-    board[8].boardpiece = bp
-    board[9].boardpiece = bp
-    board[10].boardpiece = bp
-    board[11].boardpiece = bp
-    board[12].boardpiece = bp
-    board[13].boardpiece = bp
-    board[14].boardpiece = bp
-    board[15].boardpiece = bp
+    board[0].boardpiece = copy.deepcopy(br)
+    board[1].boardpiece = copy.deepcopy(bn)
+    board[2].boardpiece = copy.deepcopy(bb)
+    board[3].boardpiece = copy.deepcopy(bq)
+    board[4].boardpiece = copy.deepcopy(bk)
+    board[5].boardpiece = copy.deepcopy(bb)
+    board[6].boardpiece = copy.deepcopy(bn)
+    board[7].boardpiece = copy.deepcopy(br)
+    board[8].boardpiece = copy.deepcopy(bp)
+    board[9].boardpiece = copy.deepcopy(bp)
+    board[10].boardpiece = copy.deepcopy(bp)
+    board[11].boardpiece = copy.deepcopy(bp)
+    board[12].boardpiece = copy.deepcopy(bp)
+    board[13].boardpiece = copy.deepcopy(bp)
+    board[14].boardpiece = copy.deepcopy(bp)
+    board[15].boardpiece = copy.deepcopy(bp)
 
-    board[63].boardpiece = wr
-    board[62].boardpiece = wn
-    board[61].boardpiece = wb
-    board[60].boardpiece = wk
-    board[59].boardpiece = wq
-    board[58].boardpiece = wb
-    board[57].boardpiece = wn
-    board[56].boardpiece = wr
-    board[55].boardpiece = wp
-    board[54].boardpiece = wp
-    board[53].boardpiece = wp
-    board[52].boardpiece = wp
-    board[51].boardpiece = wp
-    board[50].boardpiece = wp
-    board[49].boardpiece = wp
-    board[48].boardpiece = wp
+    board[63].boardpiece = copy.deepcopy(wr)
+    board[62].boardpiece = copy.deepcopy(wn)
+    board[61].boardpiece = copy.deepcopy(wb)
+    board[60].boardpiece = copy.deepcopy(wk)
+    board[59].boardpiece = copy.deepcopy(wq)
+    board[58].boardpiece = copy.deepcopy(wb)
+    board[57].boardpiece = copy.deepcopy(wn)
+    board[56].boardpiece = copy.deepcopy(wr)
+    board[55].boardpiece = copy.deepcopy(wp)
+    board[54].boardpiece = copy.deepcopy(wp)
+    board[53].boardpiece = copy.deepcopy(wp)
+    board[52].boardpiece = copy.deepcopy(wp)
+    board[51].boardpiece = copy.deepcopy(wp)
+    board[50].boardpiece = copy.deepcopy(wp)
+    board[49].boardpiece = copy.deepcopy(wp)
+    board[48].boardpiece = copy.deepcopy(wp)
     for i in range(64):
         board[i].backgroundcolor = getbackgroundcolor(i)
         if board[i].boardpiece.piece != ChessPiece.NONE:
             board[i].boardpiece.occupied = True
+        piecetoimage(board[i])
     return board
 
 def piecetoimage(boardsquare):
@@ -163,6 +153,6 @@ def boarddraw(screen, board):
     for i in range(64):
         pygame.draw.rect(screen, board[i].backgroundcolor,board[i].backgroundrect)
         if board[i].boardpiece.image!=None:
-           screen.blit(board[i].boardpiece.image,squaretocoordinatespiecelocation(i))
+           screen.blit(board[i].boardpiece.image, squareindextocoordinatespiecelocation(i))
     pygame.display.flip()
 
